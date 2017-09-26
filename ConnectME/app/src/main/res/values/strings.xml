@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">ConnectME</string>
+    <string name="button_home">Fetch</string>
+    <string name="message_home">Enter a URL to load data from!</string>
+    <string name="message_loader">Data will load here</string>
 </resources>
