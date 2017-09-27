@@ -1,64 +1,127 @@
 package com.example.shubham1172.connectme;
 
-import android.app.LoaderManager;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.Loader;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements LoaderCallbacks<String>{
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-    private static final int DATA_LOADER_ID = 1; /** Unique number to identify loader */
-    private ProgressBar progressBar;
-    private TextView result;
-    private String mURL = null;
-    LoaderManager loaderManager;
-    Boolean flag = false; //hack
+public class MainActivity extends AppCompatActivity{
+
+    private FirebaseAuth mAuth;
+    private final String TAG = "MainActivity tag";
+    private EditText email_edit;
+    private EditText pass_edit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loaderManager = getLoaderManager();
-        result = (TextView)findViewById(R.id.text_home);
-        progressBar = (ProgressBar)findViewById(R.id.progress_bar);
+        mAuth = FirebaseAuth.getInstance();
+        email_edit  = (EditText)findViewById(R.id.home_email);
+        pass_edit = (EditText)findViewById(R.id.home_password);
     }
 
-    public void buttonClick(View v){
-        mURL = ((EditText)findViewById(R.id.home_URL)).getText().toString();
-        if(flag)
-            loaderManager.restartLoader(DATA_LOADER_ID, null, this);
-        else {
-            loaderManager.initLoader(DATA_LOADER_ID, null, this);
-            flag = true;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //check if user if signed in and update the UI accordingly
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
+    }
+
+    /**
+     * Updates UI according to login state
+     * @param firebaseUser
+     */
+    private void updateUI(FirebaseUser firebaseUser){
+        if(firebaseUser!=null){
+            startActivity(new Intent(this, HomeActivity.class));
+        }else{
+            pass_edit.setText(""); //clear views
         }
     }
 
-    private void notifyLoading(){
-        String message = "Fetching data: "+ mURL;
-        Toast notify = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        notify.show();
-        progressBar.setVisibility(View.VISIBLE);
+    /**
+     * Validates form data
+     * @return
+     */
+    private Boolean getData(){
+        String email = email_edit.getText().toString().trim();
+        String password = pass_edit.getText().toString().trim();
+        if(email.length()>3&&password.length()>3)
+            return true;
+        Toast.makeText(this,"Please check the form again!", Toast.LENGTH_SHORT).show();
+        pass_edit.setText(""); //clear views
+        return false;
     }
 
-    @Override
-    public Loader<String> onCreateLoader(int id, Bundle args) {
-        notifyLoading();
-        return new DataLoader(this, mURL);
+    /**
+     * Sign up button onClick code
+     * @param view
+     */
+    public void signUp(View view){
+        if(getData())
+            mAuth.createUserWithEmailAndPassword(email_edit.getText().toString(), pass_edit.getText().toString())
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>(){
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        //Sign in success
+                        Log.d(TAG, "createUserWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        user.sendEmailVerification();
+                        Toast.makeText(MainActivity.this, "Verify your email to login!", Toast.LENGTH_SHORT).show();
+                        mAuth.signOut();
+                        updateUI(null);
+                    }else{
+                        // If sign up fails, display a message to the user.
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(MainActivity.this, "Sign up failed!",
+                                Toast.LENGTH_SHORT).show();
+                        updateUI(null);
+                    }
+                }
+            });
     }
 
-    @Override
-    public void onLoadFinished(Loader<String> loader, String data) {
-        progressBar.setVisibility(View.GONE);
-        result.setText(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<String> loader) {
-
+    /**
+     * Sign in button onClick code
+     * @param view
+     */
+    public void signIn(View view){
+        if(getData())
+            mAuth.signInWithEmailAndPassword(email_edit.getText().toString(), pass_edit.getText().toString())
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        // Sign in success
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if(user.isEmailVerified())
+                            updateUI(user);
+                        else {
+                            Toast.makeText(MainActivity.this, "Verify your email to login!", Toast.LENGTH_SHORT).show();
+                            mAuth.signOut();
+                        }
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Toast.makeText(MainActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                        updateUI(null);
+                    }
+                }
+            });
     }
 }

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">ConnectME</string>
-    <string name="button_home">Fetch</string>
-    <string name="message_home">Enter a URL to load data from!</string>
-    <string name="message_loader">Data will load here</string>
+    <string name="sign_up_text">Sign up</string>
+    <string name="sign_in_text">Sign in</string>
+    <string name="sign_out_text">Sign out</string>
+    <string name="home_email">email</string>
+    <string name="home_password">password</string>
 </resources>
+
