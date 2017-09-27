@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<S
         setContentView(R.layout.activity_main);
         loaderManager = getLoaderManager();
         result = (TextView)findViewById(R.id.text_home);
+        progressBar = (ProgressBar)findViewById(R.id.progress_bar);
     }
 
     public void buttonClick(View v){
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<S
         String message = "Fetching data: "+ mURL;
         Toast notify = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         notify.show();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<S
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
+        progressBar.setVisibility(View.GONE);
         result.setText(data);
     }
 
