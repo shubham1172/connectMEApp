@@ -1,51 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:padding="10dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.example.shubham1172.connectme.MainActivity">
 
-    <RelativeLayout
+    <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="@string/home_email"
-            android:id="@+id/home_email"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="@string/home_password"
-            android:inputType="textPassword"
-            android:layout_below="@id/home_email"
-            android:id="@+id/home_password"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/home_password">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sign_up_text"
-                android:onClick="signUp"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sign_in_text"
-                android:onClick="signIn"/>
-
-        </LinearLayout>
-
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/pager">
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>
