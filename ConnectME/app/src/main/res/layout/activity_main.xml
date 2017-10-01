@@ -6,10 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.shubham1172.connectme.MainActivity">
 
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:id="@+id/tab_layout">
+    </android.support.design.widget.TabLayout>
+
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/pager">
+        android:id="@+id/pager"
+        android:layout_below="@id/tab_layout">
     </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

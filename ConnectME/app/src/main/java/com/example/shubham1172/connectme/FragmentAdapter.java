@@ -18,10 +18,10 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position){
+            case 0:
+                return new SignInFragment();
             case 1:
                 return new SignUpFragment();
-            case 2:
-                return new SignInFragment();
             default:
                 return null;
         }
@@ -31,5 +31,17 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         //SignUp and SignIn
         return 2;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position){
+            case 0:
+                return "Sign In";
+            case 1:
+                return "Sign Up";
+            default:
+                return null;
+        }
     }
 }
