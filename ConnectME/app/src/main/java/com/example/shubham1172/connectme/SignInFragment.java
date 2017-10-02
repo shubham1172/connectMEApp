@@ -37,13 +37,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener{
         return rootView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        ((MainActivity)getActivity()).updateUI(firebaseUser);
-    }
-
     /**
      * Verifies form data
      * @return
@@ -78,6 +71,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener{
                         ((MainActivity) getActivity()).updateUI(mAuth.getCurrentUser());
                     else{
                         mAuth.signOut();
+                        clearForm();
                         Toast.makeText(getActivity(), "Verify your email to login!", Toast.LENGTH_SHORT).show();
                     }
                 }

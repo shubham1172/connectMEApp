@@ -39,12 +39,6 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        ((MainActivity)getActivity()).updateUI(mAuth.getCurrentUser());
-    }
-
     /**
      * Verifies form data
      * @return
