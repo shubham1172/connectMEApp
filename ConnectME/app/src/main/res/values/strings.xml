@@ -6,5 +6,10 @@
     <string name="button_signup">Go!</string>
     <string name="button_signin">Connect!</string>
     <string name="menu_signout">Sign out</string>
+    <string name="privacy_mode">Privacy Mode</string>
+    <string name="location">Location</string>
+    <string name="send">Send</string>
+    <string name="message_hint">Write your message here...</string>
+    <string name="title_activity_location">Map</string>
 </resources>
 

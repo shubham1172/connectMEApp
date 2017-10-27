@@ -15,13 +15,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private EditText username, email, password;
     private String tusername, temail, tpassword;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
     private final static String TAG = "SignUpFragment ";
 
     @Override
@@ -35,6 +40,10 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         password = (EditText)rootView.findViewById(R.id.password_signup);
         Button button = (Button)rootView.findViewById(R.id.button_signup);
         button.setOnClickListener(this);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -84,7 +93,14 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                         public void onComplete(@NonNull Task<Void> task) {
                             //send email verification and sign out
                             if(task.isSuccessful()){
-                                mAuth.getCurrentUser().sendEmailVerification();
+                                final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                                firebaseUser.sendEmailVerification();
+                                final DatabaseReference userNode = databaseReference.child("users").child(firebaseUser.getUid());
+                                userNode.child("username").setValue(tusername);
+                                userNode.child("privacy").setValue(false);
+                                //location
+                                userNode.child("location").child("lat").setValue(0);
+                                userNode.child("location").child("lng").setValue(0);
                                 mAuth.signOut();
                                 Toast.makeText(getActivity(), "Verify your email and login!", Toast.LENGTH_SHORT).show();
                                 clearForm();
